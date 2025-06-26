@@ -2,31 +2,29 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { FaReact, FaNodeJs, FaRunning, FaLock } from "react-icons/fa";
+import { FaReact, FaNodeJs, FaRunning, FaLock, FaLinux, FaPython } from "react-icons/fa";
 import CountUp from "react-countup";
-import { Separator } from "@/components/ui/separator";
-import { JSX } from "react";
 
-const webSkills = [
-  { name: "React", icon: <FaReact />, level: "Advanced" },
-  { name: "Next.js", icon: <FaNodeJs />, level: "Advanced" },
-  { name: "TypeScript", icon: <FaReact />, level: "Intermediate" },
-  { name: "Tailwind CSS", icon: <FaReact />, level: "Advanced" },
-];
-
-const parkourSkills = [
-  { name: "Wall Run", icon: <FaRunning />, level: "Expert" },
-  { name: "Vaults", icon: <FaRunning />, level: "Advanced" },
-  { name: "Cat Leap", icon: <FaRunning />, level: "Intermediate" },
-  { name: "Precision Jump", icon: <FaRunning />, level: "Expert" },
-];
-
-const hackerSkills = [
-  { name: "Linux", icon: <FaLock />, level: "Intermediate" },
-  { name: "OSINT", icon: <FaLock />, level: "Intermediate" },
-  { name: "Burp Suite", icon: <FaLock />, level: "Beginner" },
-  { name: "Nmap", icon: <FaLock />, level: "Intermediate" },
-];
+const skillsData = {
+  web: [
+    { name: "React", icon: <FaReact />, level: "Advanced", percent: 90 },
+    { name: "Next.js", icon: <FaNodeJs />, level: "Advanced", percent: 85 },
+    { name: "TypeScript", icon: <FaReact />, level: "Intermediate", percent: 75 },
+    { name: "Tailwind CSS", icon: <FaReact />, level: "Advanced", percent: 90 },
+  ],
+  parkour: [
+    { name: "Wall Run", icon: <FaRunning />, level: "Expert", percent: 95 },
+    { name: "Vaults", icon: <FaRunning />, level: "Advanced", percent: 85 },
+    { name: "Cat Leap", icon: <FaRunning />, level: "Intermediate", percent: 70 },
+    { name: "Precision Jump", icon: <FaRunning />, level: "Expert", percent: 90 },
+  ],
+  hacker: [
+    { name: "Linux", icon: <FaLinux />, level: "Intermediate", percent: 80 },
+    { name: "OSINT", icon: <FaLock />, level: "Intermediate", percent: 75 },
+    { name: "Nmap", icon: <FaLock />, level: "Intermediate", percent: 70 },
+    { name: "Python", icon: <FaPython />, level: "Beginner", percent: 60 },
+  ],
+};
 
 const AnimatedStat = ({ value, label }: { value: number; label: string }) => (
   <div className="text-center space-y-1">
@@ -37,17 +35,31 @@ const AnimatedStat = ({ value, label }: { value: number; label: string }) => (
   </div>
 );
 
-const SkillCard = ({ skill }: { skill: { name: string; icon: JSX.Element; level: string } }) => (
+const SkillCard = ({ skill }: { skill: (typeof skillsData.web)[0] }) => (
   <motion.div
-    whileHover={{ scale: 1.05 }}
-    whileInView={{ opacity: 1, y: 0 }}
+    whileHover={{ scale: 1.04 }}
     initial={{ opacity: 0, y: 30 }}
-    transition={{ duration: 0.3 }}
-    className="p-4 rounded-xl bg-muted/30 border border-muted shadow-sm text-center space-y-2"
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4 }}
+    className="p-4 rounded-xl bg-muted/30 border border-muted shadow-sm"
   >
-    <div className="text-3xl text-blue-600 mx-auto">{skill.icon}</div>
-    <h4 className="font-semibold">{skill.name}</h4>
-    <p className="text-sm text-muted-foreground">{skill.level}</p>
+    <div className="flex items-center gap-3 text-xl font-semibold text-blue-600 mb-2">
+      {skill.icon}
+      <span>{skill.name}</span>
+    </div>
+    <p className="text-sm text-muted-foreground mb-2">{skill.level}</p>
+    {/* Progress Bar */}
+    <div className="w-full bg-muted rounded-full h-2">
+      <motion.div
+        className="bg-blue-600 h-2 rounded-full"
+        initial={{ width: 0 }}
+        whileInView={{ width: `${skill.percent}%` }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+      />
+    </div>
+    <p className="text-right text-xs text-muted-foreground mt-1">
+      {skill.percent}%
+    </p>
   </motion.div>
 );
 
@@ -63,7 +75,7 @@ export default function SkillsPage() {
       >
         <div className="text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-blue-600 dark:text-blue-500">My Skills</h2>
-          <p className="text-muted-foreground mt-3 text-lg">What I bring to the table.</p>
+          <p className="text-muted-foreground mt-3 text-lg">Experience and Proficiency</p>
         </div>
 
         {/* Stats */}
@@ -74,30 +86,37 @@ export default function SkillsPage() {
           <AnimatedStat value={10} label="Security Tools" />
         </div>
 
-        <Separator className="my-6" />
-
         {/* Tabs */}
         <Tabs defaultValue="web" className="w-full">
           <TabsList className="flex flex-wrap justify-center gap-4 bg-muted p-2 rounded-xl">
-            <TabsTrigger value="web">Web Development</TabsTrigger>
+            <TabsTrigger value="web">Web Dev</TabsTrigger>
             <TabsTrigger value="parkour">Parkour</TabsTrigger>
-            <TabsTrigger value="hacker">Ethical Hacking</TabsTrigger>
+            <TabsTrigger value="hacker">Hacking</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="web" className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {webSkills.map((skill) => (
+          <TabsContent
+            value="web"
+            className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {skillsData.web.map((skill) => (
               <SkillCard key={skill.name} skill={skill} />
             ))}
           </TabsContent>
 
-          <TabsContent value="parkour" className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {parkourSkills.map((skill) => (
+          <TabsContent
+            value="parkour"
+            className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {skillsData.parkour.map((skill) => (
               <SkillCard key={skill.name} skill={skill} />
             ))}
           </TabsContent>
 
-          <TabsContent value="hacker" className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {hackerSkills.map((skill) => (
+          <TabsContent
+            value="hacker"
+            className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {skillsData.hacker.map((skill) => (
               <SkillCard key={skill.name} skill={skill} />
             ))}
           </TabsContent>
