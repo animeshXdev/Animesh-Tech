@@ -81,6 +81,7 @@ export default function Hero() {
             alt="Hero Illustration"
             width={400}
             height={400}
+onContextMenu={(e) => e.preventDefault()}  draggable={false} 
             className="w-3/4 sm:w-2/3 md:w-full max-w-md h-auto"
             priority
           />
